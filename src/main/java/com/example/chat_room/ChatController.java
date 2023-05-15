@@ -48,7 +48,7 @@ public class ChatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            server = new Server(new ServerSocket(0));
+            server = new Server(new ServerSocket(1234));
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error creating server.");
