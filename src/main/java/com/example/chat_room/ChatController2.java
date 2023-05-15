@@ -47,7 +47,7 @@ public class ChatController2 implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            client = new Client(new Socket("localhost", 1235));
+            client = new Client(new Socket("localhost", 1234));
             System.out.println("Connected to server");
         } catch (IOException e) {
             e.printStackTrace();
