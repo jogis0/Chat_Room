@@ -20,13 +20,14 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 ///////////////////////
 /* CLIENT CONTROLLER */
 ///////////////////////
+
 public class ChatController2 implements Initializable {
     @FXML
     private ScrollPane spMain;

@@ -55,7 +55,7 @@ public class ChatController implements Initializable {
         }
         messageVBox.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 spMain.setVvalue((Double) newValue);
             }
         });
