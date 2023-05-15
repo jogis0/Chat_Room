@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("chat-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         stage.setTitle("Chat Room");
         stage.setScene(new Scene(root, 500, 400));
         stage.show();

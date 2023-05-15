@@ -1,6 +1,5 @@
 package com.example.chat_room;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -24,12 +23,7 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-///////////////////////
-/* SERVER CONTROLLER */
-///////////////////////
-
 public class ChatController implements Initializable {
-    @FXML
     private ScrollPane spMain;
 
     @FXML
@@ -86,27 +80,6 @@ public class ChatController implements Initializable {
                     server.sendMessageToClient(messageToSend);
                     tfMessage.clear();
                 }
-            }
-        });
-    }
-
-    public static void addLabel(String messageFromClient, VBox vbox){
-        HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        hbox.setPadding(new Insets(5, 5, 5, 10));
-
-        Text text = new Text(messageFromClient);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-background-color: rgb(233,233,235); " +
-                "-fx-background-radius: 20px;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        hbox.getChildren().add(textFlow);
-
-        //You can only update the gui with main application thread
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                vbox.getChildren().add(hbox);
             }
         });
     }
