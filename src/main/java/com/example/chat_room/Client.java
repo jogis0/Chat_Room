@@ -1,8 +1,9 @@
 package com.example.chat_room;
 
+import javafx.scene.layout.VBox;
+
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
     private Socket socket;
@@ -14,47 +15,51 @@ public class Client {
     public Client(Socket socket, String username) {
         try {
             this.socket = socket;
+            this.username = username;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.username = username;
+            writeUsername(username);
         } catch (IOException e) {
             System.out.println("Failed to create user.");
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
 
-    public void sendMessage() {
+    public void writeUsername(String username){
         try {
             bufferedWriter.write(username);
             bufferedWriter.newLine();
             bufferedWriter.flush();
+        } catch (IOException e) {
+            System.out.println("Couldn't send username to ClientHandler");
+            e.printStackTrace();
+        }
+    }
 
-            Scanner scanner = new Scanner(System.in);
-            while (socket.isConnected()) {
-                String messageToSend = scanner.nextLine();
+    public void sendMessage(String messageToSend) {
+        try {
+            if(socket.isConnected()) {
                 bufferedWriter.write(username + ": " + messageToSend);
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
             }
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
-
         }
     }
 
-    public void listenForMessage() {
+    public void listenForMessage(VBox vbox) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String messageFromGroupchat;
-
                 while (socket.isConnected()) {
                     try {
                         messageFromGroupchat = bufferedReader.readLine();
                         System.out.println(messageFromGroupchat);
+                        ChatController.addLabel(messageFromGroupchat, vbox);
                     } catch (IOException e) {
                         closeEverything(socket, bufferedReader, bufferedWriter);
-
                     }
                 }
             }
@@ -75,15 +80,5 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter username:");
-        String username = scanner.nextLine();
-        Socket socket = new Socket("localHost", 5000);
-        Client client = new Client(socket, username);
-        client.listenForMessage();
-        client.sendMessage();
     }
 }

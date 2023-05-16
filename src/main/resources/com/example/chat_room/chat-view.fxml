@@ -16,7 +16,7 @@
             <VBox fx:id="messageVBox" prefHeight="290.0" prefWidth="440.0" />
          </content></ScrollPane>
       <TextField fx:id="tfMessage" layoutX="24.0" layoutY="361.0" prefHeight="25.0" prefWidth="401.0" promptText="Enter message" />
-      <Button fx:id="sendButton" defaultButton="true" layoutX="432.0" layoutY="361.0" mnemonicParsing="false" text="Send" />
+      <Button fx:id="sendButton" defaultButton="true" layoutX="432.0" layoutY="361.0" mnemonicParsing="false" onAction="#handle" text="Send" />
       <Label fx:id="nameLabel" layoutX="200.0" layoutY="18.0" text="/* USER'S NAME */" />
    </children>
 </AnchorPane>

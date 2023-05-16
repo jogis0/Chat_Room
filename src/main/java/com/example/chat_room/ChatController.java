@@ -1,5 +1,6 @@
 package com.example.chat_room;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -8,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -17,13 +19,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ChatController implements Initializable {
+public class ChatController extends MasterController implements Initializable {
+    @FXML
     private ScrollPane spMain;
 
     @FXML
@@ -38,14 +42,21 @@ public class ChatController implements Initializable {
     @FXML
     private Label nameLabel;
 
-    private Server server;
+    private Client client;
+
+    public String username;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            server = new Server(new ServerSocket(1234));
+            Singleton singleton = Singleton.getInstance();
+            this.username = singleton.getUsername();
+            nameLabel.setText(username);
+            Socket socket = new Socket("localHost", 1234);
+            client = new Client(socket, username);
+            System.out.println("CLIENT CREATED!");
         } catch (IOException e) {
+            System.out.println("Error starting user");
             e.printStackTrace();
-            System.out.println("Error creating server.");
         }
         messageVBox.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -54,33 +65,52 @@ public class ChatController implements Initializable {
             }
         });
 
-        server.receiveMessageFromClient(messageVBox);
+        client.listenForMessage(messageVBox);
+    }
 
-        sendButton.setOnAction(new EventHandler<ActionEvent>() {
+    public static void addLabel(String messageFromServer, VBox vbox){
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        hbox.setPadding(new Insets(5, 5, 5, 10));
+
+        Text text = new Text(messageFromServer);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-background-color: rgb(233,233,235); " +
+                "-fx-background-radius: 20px;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        hbox.getChildren().add(textFlow);
+
+        //You can only update the gui with main application thread
+        Platform.runLater(new Runnable() {
             @Override
-            public void handle(ActionEvent event) {
-                String messageToSend = tfMessage.getText();
-                if(!messageToSend.isEmpty()){
-                    HBox hBox = new HBox();
-                    hBox.setAlignment(Pos.CENTER_RIGHT);
-                    hBox.setPadding(new Insets(5, 5, 5, 10));
-
-                    Text text = new Text(messageToSend);
-                    TextFlow textFlow = new TextFlow(text);
-
-                    textFlow.setStyle("-fx-color: rgb(239,242,255); " +
-                            "-fx-background-color: rgb(15,125,242);" +
-                            " -fx-background-radius: 20px");
-                    textFlow.setPadding(new Insets(5, 10, 5, 10));
-                    text.setFill(Color.color(0.934, 0.945, 0.996));
-
-                    hBox.getChildren().add(textFlow);
-                    messageVBox.getChildren().add(hBox);
-
-                    server.sendMessageToClient(messageToSend);
-                    tfMessage.clear();
-                }
+            public void run() {
+                vbox.getChildren().add(hbox);
             }
         });
+    }
+
+    @FXML
+    public void handle(ActionEvent event) {
+        String messageToSend = tfMessage.getText();
+        if(!messageToSend.isEmpty()){
+            HBox hBox = new HBox();
+            hBox.setAlignment(Pos.CENTER_RIGHT);
+            hBox.setPadding(new Insets(5, 5, 5, 10));
+
+            Text text = new Text(messageToSend);
+            TextFlow textFlow = new TextFlow(text);
+
+            textFlow.setStyle("-fx-color: rgb(239,242,255); " +
+                    "-fx-background-color: rgb(15,125,242);" +
+                    " -fx-background-radius: 20px");
+            textFlow.setPadding(new Insets(5, 10, 5, 10));
+            text.setFill(Color.color(0.934, 0.945, 0.996));
+
+            hBox.getChildren().add(textFlow);
+            messageVBox.getChildren().add(hBox);
+
+            client.sendMessage(messageToSend);
+            tfMessage.clear();
+        }
     }
 }

@@ -13,7 +13,6 @@ public class ClientHandler implements Runnable{
     private String clientUsername;
 
     public ClientHandler(Socket socket){
-
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))  ;
