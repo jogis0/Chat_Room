@@ -2,6 +2,7 @@ package com.example.chat_room;
 
 public class Singleton {
     private String username;
+    private String receiverName;
     private static Singleton instance;
 
     private Singleton() {}
@@ -18,5 +19,13 @@ public class Singleton {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
     }
 }

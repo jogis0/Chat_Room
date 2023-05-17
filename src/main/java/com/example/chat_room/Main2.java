@@ -10,10 +10,6 @@ public class Main2 extends Application {
     /* Main class for the server */
     @Override
     public void start(Stage stage) throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("server-view.fxml"));
-//        stage.setTitle("Chat Room");
-//        stage.setScene(new Scene(root));
-//        stage.show();
         try {
             Server server = new Server(new ServerSocket(1234));
             server.startServer();

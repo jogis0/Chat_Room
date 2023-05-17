@@ -4,32 +4,40 @@ import javafx.scene.layout.VBox;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Client {
-    private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
-    private String username;
+    public Socket socket;
+    public BufferedReader bufferedReader;
+    public BufferedWriter bufferedWriter;
+    public String username;
+    public String receiver;
+    public ArrayList<String> messageData = new ArrayList<>();
 
 
-    public Client(Socket socket, String username) {
+    public Client(Socket socket, String username, String receiver) {
         try {
             this.socket = socket;
             this.username = username;
+            this.receiver = receiver;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writeUsername(username);
+            writeUsername(username, receiver);
         } catch (IOException e) {
             System.out.println("Failed to create user.");
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
 
-    public void writeUsername(String username){
+    public void writeUsername(String username, String receiverName){
         try {
             bufferedWriter.write(username);
             bufferedWriter.newLine();
+            bufferedWriter.write(receiverName);
+            bufferedWriter.newLine();
             bufferedWriter.flush();
+
+            messageData.add(this.username + " " + receiver + "\n");
         } catch (IOException e) {
             System.out.println("Couldn't send username to ClientHandler");
             e.printStackTrace();
@@ -40,6 +48,7 @@ public class Client {
         try {
             if(socket.isConnected()) {
                 bufferedWriter.write(username + ": " + messageToSend);
+                messageData.add(username + ": " + messageToSend + "\n");
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
             }
@@ -56,7 +65,7 @@ public class Client {
                 while (socket.isConnected()) {
                     try {
                         messageFromGroupchat = bufferedReader.readLine();
-                        System.out.println(messageFromGroupchat);
+                        messageData.add(messageFromGroupchat + "\n");
                         ChatController.addLabel(messageFromGroupchat, vbox);
                     } catch (IOException e) {
                         closeEverything(socket, bufferedReader, bufferedWriter);

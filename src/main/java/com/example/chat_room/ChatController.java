@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -17,10 +16,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
@@ -44,15 +47,19 @@ public class ChatController extends MasterController implements Initializable {
 
     private Client client;
 
-    public String username;
+    private String username;
+
+    private String receiverName;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             Singleton singleton = Singleton.getInstance();
             this.username = singleton.getUsername();
+            this.receiverName = singleton.getReceiverName();
             nameLabel.setText(username);
             Socket socket = new Socket("localHost", 1234);
-            client = new Client(socket, username);
+            client = new Client(socket, username, receiverName);
             System.out.println("CLIENT CREATED!");
         } catch (IOException e) {
             System.out.println("Error starting user");
@@ -112,5 +119,27 @@ public class ChatController extends MasterController implements Initializable {
             client.sendMessage(messageToSend);
             tfMessage.clear();
         }
+    }
+
+    //FOR EXITING THE PROGRAM
+    @FXML
+    public void backToMenu(ActionEvent event) {
+        //client.closeEverything(client.socket, client.bufferedReader, client.bufferedWriter);
+        switchToStage("main-view.fxml", (Stage)((Node)event.getSource()).getScene().getWindow());
+    }
+
+    @FXML
+    public void saveToFile(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export file");
+        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(csvFilter);
+        File file = fileChooser.showSaveDialog(new Stage());
+
+        FileWriter writer = new FileWriter(file);
+        for(int i = 0; i < client.messageData.size(); ++i){
+            writer.write(client.messageData.get(i));
+        }
+        writer.close();
     }
 }

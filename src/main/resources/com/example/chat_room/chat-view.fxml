@@ -9,8 +9,8 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chat_room.ChatController">
    <children>
-      <Button fx:id="saveButton" layoutX="25.0" layoutY="14.0" mnemonicParsing="false" text="Save chat" />
-      <Button fx:id="backButton" layoutX="434.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
+      <Button fx:id="saveButton" layoutX="25.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveToFile" text="Save chat" />
+      <Button fx:id="backButton" layoutX="434.0" layoutY="14.0" mnemonicParsing="false" onAction="#backToMenu" text="Back" />
       <ScrollPane fx:id="spMain" layoutX="25.0" layoutY="50.0" prefHeight="300.0" prefWidth="450.0">
          <content>
             <VBox fx:id="messageVBox" prefHeight="290.0" prefWidth="440.0" />
