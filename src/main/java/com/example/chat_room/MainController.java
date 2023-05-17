@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainController extends MasterController {
+public class MainController extends MasterController implements Initializable {
     @FXML
     private Label usernameLabel;
 
@@ -70,8 +70,10 @@ public class MainController extends MasterController {
         stage.show();
     }
 
-    public void setUsername(String username){
-        this.username = username;
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Singleton singleton = Singleton.getInstance();
+        username = singleton.getUsername();
         usernameLabel.setText(username);
     }
 }

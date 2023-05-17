@@ -87,6 +87,7 @@ public class Client {
                 socket.close();
             }
         } catch (IOException e) {
+            System.out.println("Failed to close client");
             e.printStackTrace();
         }
     }

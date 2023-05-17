@@ -124,7 +124,6 @@ public class ChatController extends MasterController implements Initializable {
     //FOR EXITING THE PROGRAM
     @FXML
     public void backToMenu(ActionEvent event) {
-        //client.closeEverything(client.socket, client.bufferedReader, client.bufferedWriter);
         switchToStage("main-view.fxml", (Stage)((Node)event.getSource()).getScene().getWindow());
     }
 
@@ -132,7 +131,7 @@ public class ChatController extends MasterController implements Initializable {
     public void saveToFile(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export file");
-        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(csvFilter);
         File file = fileChooser.showSaveDialog(new Stage());
 
