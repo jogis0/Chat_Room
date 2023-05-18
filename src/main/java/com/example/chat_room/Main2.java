@@ -1,22 +1,21 @@
 package com.example.chat_room;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 
 public class Main2 extends Application {
     /* Main class for the server */
     @Override
     public void start(Stage stage) throws IOException {
-        try {
-            Server server = new Server(new ServerSocket(1234));
-            server.startServer();
-        } catch (IOException e) {
-            System.out.println("Error starting server");
-            e.printStackTrace();
-        }
+        Parent root = FXMLLoader.load(getClass().getResource("server-view.fxml"));
+        stage.setTitle("Server");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     public static void main(String[] args) {
